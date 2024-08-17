@@ -1,5 +1,5 @@
-...
+Projeto de Banco de Dados EURIDES
 
-Salve karai
+Seung jin Jucá Casierra     SP3134229
 
-Instruções para v1
+Gabriel Mendes Porto        SP3138178
