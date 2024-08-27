@@ -1,0 +1,744 @@
+CREATE DATABASE projetoEurides2;
+USE projetoEurides2;
+
+CREATE TABLE PESSOA (
+    Pessoa_id INTEGER PRIMARY KEY AUTO_INCREMENT,
+    Nome_pess VARCHAR(255),
+    Genero_pess VARCHAR(50),
+    Raca_pess VARCHAR(50),
+    Data_Nasc_pess DATE,
+    Nacionalidade_pess VARCHAR(100),
+    Naturalidade_pess VARCHAR(100),
+    Rg_pess VARCHAR(20),
+    Celular_pess VARCHAR(15),
+    Escolaridade_pess VARCHAR(100),
+    Profissao_pess VARCHAR(100),
+    Sit_Emprego_pess VARCHAR(50),
+    Estado_civil_pess VARCHAR(50),
+    Whatsapp_pess VARCHAR(15),
+    Cpf_pess VARCHAR(11),
+    Total_Membros_pess INTEGER,
+    Valor_Renda_pess FLOAT,
+    Comunid_LGBTQIA__pess BOOLEAN,
+    CNPJ_pess VARCHAR(14),
+    Resumo_Caso_pessoa TEXT,
+    Enquadra_lei VARCHAR(255),
+    Materia_solicitada VARCHAR(255),
+    Violencia BOOLEAN,
+    Logradouro VARCHAR(255),
+    Numero VARCHAR(10),
+    Cep VARCHAR(8),
+    Bairro VARCHAR(100),
+    Municipio VARCHAR(100),
+    Pessoa_Enquadra_Atend BOOLEAN,
+    Materia_Relacionada VARCHAR(255),
+    Data_Atend DATE,
+    Hora_Atend TIME
+);
+
+CREATE TABLE ADVOGADO (
+    OAB_adv INTEGER PRIMARY KEY,
+    Nome_adv VARCHAR(255),
+    CPF_adv VARCHAR(11),
+    Especialidade_adv VARCHAR(100),
+    Email_adv VARCHAR(255),
+    Celular_adv VARCHAR(15),
+    Ano_Ingresso_adv YEAR
+);
+
+CREATE TABLE ESTAGIARIO (
+    Estagiario_id INTEGER PRIMARY KEY AUTO_INCREMENT,
+    Nome_est VARCHAR(255),
+    Celular_est VARCHAR(15),
+    Tipo_est CHAR(1),
+    Email_est VARCHAR(255),
+    CPF_est VARCHAR(11),
+    FOREIGN KEY (Estagiario_id) REFERENCES PESSOA(Pessoa_id)
+);
+
+CREATE TABLE FILHO (
+    Filho_id INTEGER PRIMARY KEY AUTO_INCREMENT,
+    Pessoa_id INTEGER,
+    Mora_junto BOOLEAN,
+    FOREIGN KEY (Pessoa_id) REFERENCES PESSOA(Pessoa_id)
+);
+
+CREATE TABLE INVESTIMENTO (
+    Investimento_id INTEGER PRIMARY KEY AUTO_INCREMENT,
+    Pessoa_id INTEGER,
+    Valor_Inv VARCHAR(255),
+    FOREIGN KEY (Pessoa_id) REFERENCES PESSOA(Pessoa_id)
+);
+
+CREATE TABLE BENEFICIO (
+    Beneficio_id INTEGER PRIMARY KEY AUTO_INCREMENT,
+    Pessoa_id INTEGER,
+    Valor_Beneficio FLOAT,
+    FOREIGN KEY (Pessoa_id) REFERENCES PESSOA(Pessoa_id)
+);
+
+CREATE TABLE MEMBROS (
+    Membro_id INTEGER PRIMARY KEY AUTO_INCREMENT,
+    Pessoa_id INTEGER,
+    Renda_Membro FLOAT,
+    FOREIGN KEY (Pessoa_id) REFERENCES PESSOA(Pessoa_id)
+);
+
+CREATE TABLE TRATAMENTO (
+    Tratamento_id INTEGER PRIMARY KEY AUTO_INCREMENT,
+    Pessoa_id INTEGER,
+    Valor_Trat FLOAT,
+    FOREIGN KEY (Pessoa_id) REFERENCES PESSOA(Pessoa_id)
+);
+
+CREATE TABLE AUTOMOVEL (
+    Auto_id INTEGER PRIMARY KEY AUTO_INCREMENT,
+    Pessoa_id INTEGER,
+    Valor_Auto FLOAT,
+    FOREIGN KEY (Pessoa_id) REFERENCES PESSOA(Pessoa_id)
+);
+
+CREATE TABLE PESSOA_EST_ATRIBUICAO (
+    Data_Atribuicao DATE,
+    Pessoa_id INTEGER,
+    Estagiario_id INTEGER,
+    Hora_Atribuicao TIME,
+    PRIMARY KEY (Data_Atribuicao, Pessoa_id, Estagiario_id),
+    FOREIGN KEY (Pessoa_id) REFERENCES PESSOA(Pessoa_id),
+    FOREIGN KEY (Estagiario_id) REFERENCES ESTAGIARIO(Estagiario_id)
+);
+
+CREATE TABLE CONTROLE (
+    NumProcesso INTEGER PRIMARY KEY,
+    Estagiario_id INTEGER,
+    Pessoa_id INTEGER,
+    Tema VARCHAR(255),
+    Polo VARCHAR(100),
+    Data_Controle DATE,
+    Prox_Tarefa VARCHAR(255),
+    Tem_Prazo_Dobro BOOLEAN,
+    Obs_Prazo TEXT,
+    Audiencia VARCHAR(100),
+    Prazo_Simples DATE,
+    Prazo_Dobrado DATE,
+    Movimentacao TEXT,
+    Dias_Prox_Controle VARCHAR(50),
+    Data_Proposicao DATE,
+    FOREIGN KEY (Pessoa_id) REFERENCES PESSOA(Pessoa_id),
+    FOREIGN KEY (Estagiario_id) REFERENCES ESTAGIARIO(Estagiario_id)
+);
+
+CREATE TABLE ESTAG_ADVOG_AGENDAMENTO (
+    Agendamento_id INTEGER PRIMARY KEY AUTO_INCREMENT,
+    Estagiario_id INTEGER,
+    OAB_adv INTEGER,
+    Num_Autos INTEGER,
+    Motivo_Consulta VARCHAR(255),
+    Ident_Atend_Adv VARCHAR(255),
+    Data_Atend DATE,
+    Hora_Atend TIME,
+    Area_Direito VARCHAR(100),
+    Tipo_Orient VARCHAR(100),
+    Prazo_Judicial VARCHAR(50),
+    Hora_Agend TIME,
+    Data_Agend DATE,
+    FOREIGN KEY (Estagiario_id) REFERENCES ESTAGIARIO(Estagiario_id),
+    FOREIGN KEY (OAB_adv) REFERENCES ADVOGADO(OAB_adv)
+);
+
+CREATE TABLE DISPONIBILIDADE (
+    OAB_adv INTEGER,
+    Data_Disp DATE,
+    Dia_Semana VARCHAR(50),
+    Hora_Inic TIME,
+    Hora_Fim TIME,
+    Formato CHAR(1),
+    PRIMARY KEY (OAB_adv, Data_Disp),
+    FOREIGN KEY (OAB_adv) REFERENCES ADVOGADO(OAB_adv)
+);
+
+CREATE TABLE TELEFONE (
+    Numero_tel VARCHAR(15) PRIMARY KEY,
+    Pessoa_id INTEGER,
+    FOREIGN KEY (Pessoa_id) REFERENCES PESSOA(Pessoa_id)
+);
+
+CREATE TABLE EMAIL (
+    Email_id INTEGER PRIMARY KEY AUTO_INCREMENT,
+    Pessoa_id INTEGER,
+    Endereco_email VARCHAR(255),
+    FOREIGN KEY (Pessoa_id) REFERENCES PESSOA(Pessoa_id)
+);
+
+CREATE TABLE IMOVEL (
+    Imovel_id INTEGER PRIMARY KEY AUTO_INCREMENT,
+    Pessoa_id INTEGER,
+    Tipo_imovel VARCHAR(100),
+    Valor_imovel FLOAT,
+    FOREIGN KEY (Pessoa_id) REFERENCES PESSOA(Pessoa_id)
+);
+
+SHOW TABLES;
+DESCRIBE PESSOA;
+
+INSERT INTO PESSOA (
+    Nome_pess, Genero_pess, Raca_pess, Data_Nasc_pess, Nacionalidade_pess, 
+    Naturalidade_pess, Rg_pess, Celular_pess, Escolaridade_pess, 
+    Profissao_pess, Sit_Emprego_pess, Estado_civil_pess, Whatsapp_pess, 
+    Cpf_pess, Total_Membros_pess, Valor_Renda_pess, Comunid_LGBTQIA__pess, 
+    CNPJ_pess, Resumo_Caso_pessoa, Enquadra_lei, Materia_solicitada, 
+    Violencia, Logradouro, Numero, Cep, Bairro, Municipio, 
+    Pessoa_Enquadra_Atend, Materia_Relacionada, Data_Atend, Hora_Atend
+) 
+VALUES (
+    'João da Silva', 'Masculino', 'Branco', '1985-06-15', 'Brasileira', 
+    'São Paulo', '123456789', '(11) 98765-4321', 'Ensino Superior Completo', 
+    'Engenheiro', 'Empregado', 'Solteiro', '(11) 91234-5678', 
+    '12345678901', 4, 5000.00, FALSE, NULL, 'Descrição do caso...', 
+    'Lei 1234/56', 'Matéria A', FALSE, 'Rua Exemplo', '123', '01234567', 
+    'Centro', 'São Paulo', TRUE, 'Matéria Relacionada X', 
+    '2024-08-01', '10:30:00'
+);
+
+INSERT INTO ADVOGADO (
+    OAB_adv, Nome_adv, CPF_adv, Especialidade_adv, Email_adv, 
+    Celular_adv, Ano_Ingresso_adv
+) 
+VALUES (
+    12345, 'Maria Oliveira', '09876543210', 'Direito Civil', 
+    'maria.oliveira@exemplo.com', '(11) 99876-5432', 2010
+);
+
+INSERT INTO ESTAGIARIO (
+    Nome_est, Celular_est, Tipo_est, Email_est, CPF_est
+) 
+VALUES (
+    'Lucas Pereira', '(11) 91234-5678', 'A', 'lucas.pereira@exemplo.com', 
+    '23456789012'
+);
+
+INSERT INTO PESSOA_EST_ATRIBUICAO (
+    Data_Atribuicao, Pessoa_id, Estagiario_id, Hora_Atribuicao
+) 
+VALUES (
+    '2024-08-01', 1, 1, '10:00:00'
+);
+
+INSERT INTO FILHO (Pessoa_id, Mora_junto) 
+VALUES (1, TRUE);
+
+INSERT INTO INVESTIMENTO (Pessoa_id, Valor_Inv) 
+VALUES (1, '10000');
+
+INSERT INTO DISPONIBILIDADE (
+    OAB_adv, Data_Disp, Dia_Semana, Hora_Inic, Hora_Fim, Formato
+) 
+VALUES (
+    12345, '2024-08-01', 'Segunda-feira', '09:00:00', '12:00:00', 'P'
+);
+
+INSERT INTO CONTROLE (
+    NumProcesso, Estagiario_id, Pessoa_id, Tema, Polo, Data_Controle, 
+    Prox_Tarefa, Tem_Prazo_Dobro, Obs_Prazo, Audiencia, Prazo_Simples, 
+    Prazo_Dobrado, Movimentacao, Dias_Prox_Controle, Data_Proposicao
+) 
+VALUES (
+    987654, 1, 1, 'Temática X', 'Polo A', '2024-08-02', 
+    'Próxima tarefa Y', TRUE, 'Observação de prazo...', 
+    'Audiência A', '2024-08-10', '2024-08-20', 
+    'Movimentação processual...', '15 dias', '2024-08-01'
+);
+
+INSERT INTO AUTOMOVEL (Pessoa_id, Valor_Auto) 
+VALUES (1, 30000.00);
+
+INSERT INTO ESTAG_ADVOG_AGENDAMENTO (
+    Estagiario_id, OAB_adv, Num_Autos, Motivo_Consulta, Ident_Atend_Adv, 
+    Data_Atend, Hora_Atend, Area_Direito, Tipo_Orient, Prazo_Judicial, 
+    Hora_Agend, Data_Agend
+) 
+VALUES (
+    1, 12345, 987654, 'Consulta jurídica sobre contrato', 'Consulta inicial', 
+    '2024-08-01', '11:00:00', 'Direito Civil', 'Orientação jurídica', 
+    '2024-08-20', '10:30:00', '2024-08-01'
+);
+
+INSERT INTO BENEFICIO (Pessoa_id, Valor_Beneficio) 
+VALUES (1, 1200.00);
+
+INSERT INTO EMAIL (Pessoa_id, Endereco_email) 
+VALUES (1, 'joao.silva@exemplo.com');
+
+INSERT INTO MEMBROS (Pessoa_id, Renda_Membro) 
+VALUES (1, 1500.00);
+
+INSERT INTO TELEFONE (Numero_tel, Pessoa_id) 
+VALUES ('(11) 99876-5432', 1);
+
+INSERT INTO TRATAMENTO (Pessoa_id, Valor_Trat) 
+VALUES (1, 300.00);
+
+INSERT INTO IMOVEL (Pessoa_id, Tipo_imovel, Valor_imovel) 
+VALUES (1, 'Casa', 250000.00);
+
+
+
+INSERT INTO PESSOA (
+    Nome_pess, Genero_pess, Raca_pess, Data_Nasc_pess, Nacionalidade_pess, 
+    Naturalidade_pess, Rg_pess, Celular_pess, Escolaridade_pess, 
+    Profissao_pess, Sit_Emprego_pess, Estado_civil_pess, Whatsapp_pess, 
+    Cpf_pess, Total_Membros_pess, Valor_Renda_pess, Comunid_LGBTQIA__pess, 
+    CNPJ_pess, Resumo_Caso_pessoa, Enquadra_lei, Materia_solicitada, 
+    Violencia, Logradouro, Numero, Cep, Bairro, Municipio, 
+    Pessoa_Enquadra_Atend, Materia_Relacionada, Data_Atend, Hora_Atend
+) 
+VALUES (
+    'Ana Souza', 'Feminino', 'Negra', '1990-12-01', 'Brasileira', 
+    'Rio de Janeiro', '987654321', '(21) 99876-5432', 'Ensino Médio Completo', 
+    'Auxiliar Administrativo', 'Desempregada', 'Casada', '(21) 98765-4321', 
+    '23456789012', 3, 1500.00, FALSE, NULL, 'Problema trabalhista...', 
+    'Lei 9876/54', 'Matéria B', TRUE, 'Avenida Brasil', '456', '21012345', 
+    'Zona Norte', 'Rio de Janeiro', TRUE, 'Matéria Relacionada Y', 
+    '2024-08-05', '14:00:00'
+);
+
+INSERT INTO ADVOGADO (
+    OAB_adv, Nome_adv, CPF_adv, Especialidade_adv, Email_adv, 
+    Celular_adv, Ano_Ingresso_adv
+) 
+VALUES (
+    67890, 'Carlos Menezes', '12345678912', 'Direito Trabalhista', 
+    'carlos.menezes@exemplo.com', '(21) 98765-4321', 2008
+);
+
+INSERT INTO ESTAGIARIO (
+    Nome_est, Celular_est, Tipo_est, Email_est, CPF_est
+) 
+VALUES (
+    'Mariana Ferreira', '(21) 91234-6789', 'P', 'mariana.ferreira@exemplo.com', 
+    '34567890123'
+);
+
+INSERT INTO ESTAG_ADVOG_AGENDAMENTO (
+    Estagiario_id, OAB_adv, Num_Autos, Motivo_Consulta, Ident_Atend_Adv, 
+    Data_Atend, Hora_Atend, Area_Direito, Tipo_Orient, Prazo_Judicial, 
+    Hora_Agend, Data_Agend
+) 
+VALUES (
+    2, 67890, 123456, 'Consulta sobre demissão', 'Consulta inicial', 
+    '2024-08-05', '14:30:00', 'Direito Trabalhista', 'Orientação jurídica', 
+    '2024-08-15', '14:00:00', '2024-08-01'
+);
+
+INSERT INTO CONTROLE (
+    NumProcesso, Estagiario_id, Pessoa_id, Tema, Polo, Data_Controle, 
+    Prox_Tarefa, Tem_Prazo_Dobro, Obs_Prazo, Audiencia, Prazo_Simples, 
+    Prazo_Dobrado, Movimentacao, Dias_Prox_Controle, Data_Proposicao
+) 
+VALUES (
+    128756, 2, 2, 'Temática Y', 'Polo B', '2024-08-03', 
+    'Próxima tarefa Z', FALSE, 'Observação de prazo adicional...', 
+    'Audiência B', '2024-08-15', '2024-08-25', 
+    'Movimentação adicional...', '10 dias', '2024-08-02'
+);
+
+INSERT INTO PESSOA_EST_ATRIBUICAO (
+    Data_Atribuicao, Pessoa_id, Estagiario_id, Hora_Atribuicao
+) 
+VALUES (
+    '2024-08-02', 2, 2, '14:00:00'
+);
+
+INSERT INTO AUTOMOVEL (
+    Pessoa_id, Valor_Auto
+) 
+VALUES (
+    2, 20000.00
+);
+
+INSERT INTO DISPONIBILIDADE (
+    OAB_adv, Data_Disp, Dia_Semana, Hora_Inic, Hora_Fim, Formato
+) 
+VALUES (
+    67890, '2024-08-02', 'Sábado', '09:00:00', '12:00:00', 'P'
+);
+
+INSERT INTO FILHO (Pessoa_id, Mora_junto) 
+VALUES (2, TRUE);
+
+INSERT INTO INVESTIMENTO (Pessoa_id, Valor_Inv) 
+VALUES (2, '15000');
+
+INSERT INTO BENEFICIO (Pessoa_id, Valor_Beneficio) 
+VALUES (2, 800.00);
+
+INSERT INTO EMAIL (Pessoa_id, Endereco_email) 
+VALUES (2, 'ana.souza@exemplo.com');
+
+INSERT INTO MEMBROS (Pessoa_id, Renda_Membro) 
+VALUES (2, 2000.00);
+
+INSERT INTO TELEFONE (Numero_tel, Pessoa_id) 
+VALUES ('(21) 91234-6789', 2);
+
+INSERT INTO TRATAMENTO (Pessoa_id, Valor_Trat) 
+VALUES (2, 500.00);
+
+INSERT INTO IMOVEL (Pessoa_id, Tipo_imovel, Valor_imovel) 
+VALUES (2, 'Apartamento', 350000.00);
+
+
+
+
+INSERT INTO PESSOA (
+    Nome_pess, Genero_pess, Raca_pess, Data_Nasc_pess, Nacionalidade_pess, 
+    Naturalidade_pess, Rg_pess, Celular_pess, Escolaridade_pess, 
+    Profissao_pess, Sit_Emprego_pess, Estado_civil_pess, Whatsapp_pess, 
+    Cpf_pess, Total_Membros_pess, Valor_Renda_pess, Comunid_LGBTQIA__pess, 
+    CNPJ_pess, Resumo_Caso_pessoa, Enquadra_lei, Materia_solicitada, 
+    Violencia, Logradouro, Numero, Cep, Bairro, Municipio, 
+    Pessoa_Enquadra_Atend, Materia_Relacionada, Data_Atend, Hora_Atend
+) 
+VALUES (
+    'Paulo Almeida', 'Masculino', 'Pardo', '1978-03-22', 'Brasileira', 
+    'Belo Horizonte', '1122334455', '(31) 98876-5432', 'Ensino Médio Completo', 
+    'Motorista', 'Autônomo', 'Casado', '(31) 99876-5432', 
+    '45678901234', 5, 2500.00, FALSE, NULL, 'Questão de trânsito...', 
+    'Lei 7654/32', 'Matéria C', TRUE, 'Rua Minas Gerais', '789', '30123456', 
+    'Centro', 'Belo Horizonte', TRUE, 'Matéria Relacionada Z', 
+    '2024-08-10', '09:00:00'
+);
+
+INSERT INTO ADVOGADO (
+    OAB_adv, Nome_adv, CPF_adv, Especialidade_adv, Email_adv, 
+    Celular_adv, Ano_Ingresso_adv
+) 
+VALUES (
+    54321, 'Fernanda Costa', '23456789012', 'Direito Penal', 
+    'fernanda.costa@exemplo.com', '(31) 98765-4321', 2012
+);
+
+INSERT INTO ESTAGIARIO (
+    Nome_est, Celular_est, Tipo_est, Email_est, CPF_est
+) 
+VALUES (
+    'Rafael Silva', '(31) 98765-4321', 'A', 'rafael.silva@exemplo.com', 
+    '56789012345'
+);
+
+INSERT INTO ESTAG_ADVOG_AGENDAMENTO (
+    Estagiario_id, OAB_adv, Num_Autos, Motivo_Consulta, Ident_Atend_Adv, 
+    Data_Atend, Hora_Atend, Area_Direito, Tipo_Orient, Prazo_Judicial, 
+    Hora_Agend, Data_Agend
+) 
+VALUES (
+    3, 54321, 654321, 'Consulta sobre infração de trânsito', 'Consulta inicial', 
+    '2024-08-10', '09:30:00', 'Direito Penal', 'Orientação jurídica', 
+    '2024-08-25', '09:00:00', '2024-08-05'
+);
+
+INSERT INTO CONTROLE (
+    NumProcesso, Estagiario_id, Pessoa_id, Tema, Polo, Data_Controle, 
+    Prox_Tarefa, Tem_Prazo_Dobro, Obs_Prazo, Audiencia, Prazo_Simples, 
+    Prazo_Dobrado, Movimentacao, Dias_Prox_Controle, Data_Proposicao
+) 
+VALUES (
+    234567, 3, 3, 'Temática Z', 'Polo C', '2024-08-03', 
+    'Próxima tarefa X', TRUE, 'Observação de prazo adicional para a pessoa 3', 
+    'Audiência C', '2024-08-20', '2024-09-01', 
+    'Movimentação adicional para a pessoa 3', '15 dias', '2024-08-01'
+);
+
+INSERT INTO PESSOA_EST_ATRIBUICAO (
+    Data_Atribuicao, Pessoa_id, Estagiario_id, Hora_Atribuicao
+) 
+VALUES (
+    '2024-08-03', 3, 3, '15:00:00'
+);
+
+INSERT INTO AUTOMOVEL (
+    Pessoa_id, Valor_Auto
+) 
+VALUES (
+    3, 25000.00
+);
+
+INSERT INTO DISPONIBILIDADE (
+    OAB_adv, Data_Disp, Dia_Semana, Hora_Inic, Hora_Fim, Formato
+) 
+VALUES (
+    54321, '2024-08-03', 'Domingo', '10:00:00', '13:00:00', 'M'
+);
+
+INSERT INTO FILHO (Pessoa_id, Mora_junto) 
+VALUES (3, TRUE);
+
+INSERT INTO INVESTIMENTO (Pessoa_id, Valor_Inv) 
+VALUES (3, '5000');
+
+INSERT INTO BENEFICIO (Pessoa_id, Valor_Beneficio) 
+VALUES (3, 600.00);
+
+INSERT INTO EMAIL (Pessoa_id, Endereco_email) 
+VALUES (3, 'paulo.almeida@exemplo.com');
+
+INSERT INTO MEMBROS (Pessoa_id, Renda_Membro) 
+VALUES (3, 1000.00);
+
+INSERT INTO TELEFONE (Numero_tel, Pessoa_id) 
+VALUES ('(31) 98876-5432', 3);
+
+INSERT INTO TRATAMENTO (Pessoa_id, Valor_Trat) 
+VALUES (3, 400.00);
+
+INSERT INTO IMOVEL (Pessoa_id, Tipo_imovel, Valor_imovel) 
+VALUES (3, 'Casa', 200000.00);
+
+
+
+
+
+INSERT INTO PESSOA (
+    Nome_pess, Genero_pess, Raca_pess, Data_Nasc_pess, Nacionalidade_pess, 
+    Naturalidade_pess, Rg_pess, Celular_pess, Escolaridade_pess, 
+    Profissao_pess, Sit_Emprego_pess, Estado_civil_pess, Whatsapp_pess, 
+    Cpf_pess, Total_Membros_pess, Valor_Renda_pess, Comunid_LGBTQIA__pess, 
+    CNPJ_pess, Resumo_Caso_pessoa, Enquadra_lei, Materia_solicitada, 
+    Violencia, Logradouro, Numero, Cep, Bairro, Municipio, 
+    Pessoa_Enquadra_Atend, Materia_Relacionada, Data_Atend, Hora_Atend
+) 
+VALUES (
+    'Beatriz Oliveira', 'Feminino', 'Branca', '1985-06-14', 'Brasileira', 
+    'Salvador', '2233445566', '(71) 99876-5432', 'Ensino Superior Completo', 
+    'Professora', 'Empregada', 'Solteira', '(71) 98765-4321', 
+    '67890123456', 2, 3500.00, FALSE, NULL, 'Consulta sobre herança...', 
+    'Lei 1234/56', 'Matéria D', FALSE, 'Rua Bahia', '123', '40123456', 
+    'Pituba', 'Salvador', TRUE, 'Matéria Relacionada W', 
+    '2024-08-15', '16:00:00'
+);
+
+INSERT INTO ADVOGADO (
+    OAB_adv, Nome_adv, CPF_adv, Especialidade_adv, Email_adv, 
+    Celular_adv, Ano_Ingresso_adv
+) 
+VALUES (
+    98765, 'José Pereira', '34567890123', 'Direito Civil', 
+    'jose.pereira@exemplo.com', '(71) 98765-4321', 2010
+);
+
+INSERT INTO ESTAGIARIO (
+    Nome_est, Celular_est, Tipo_est, Email_est, CPF_est
+) 
+VALUES (
+    'Lucas Carvalho', '(71) 91234-5678', 'B', 'lucas.carvalho@exemplo.com', 
+    '78901234567'
+);
+
+INSERT INTO ESTAG_ADVOG_AGENDAMENTO (
+    Estagiario_id, OAB_adv, Num_Autos, Motivo_Consulta, Ident_Atend_Adv, 
+    Data_Atend, Hora_Atend, Area_Direito, Tipo_Orient, Prazo_Judicial, 
+    Hora_Agend, Data_Agend
+) 
+VALUES (
+    4, 98765, 456789, 'Consulta sobre divisão de bens', 'Consulta inicial', 
+    '2024-08-15', '16:30:00', 'Direito Civil', 'Orientação jurídica', 
+    '2024-08-30', '16:00:00', '2024-08-10'
+);
+
+INSERT INTO CONTROLE (
+    NumProcesso, Estagiario_id, Pessoa_id, Tema, Polo, Data_Controle, 
+    Prox_Tarefa, Tem_Prazo_Dobro, Obs_Prazo, Audiencia, Prazo_Simples, 
+    Prazo_Dobrado, Movimentacao, Dias_Prox_Controle, Data_Proposicao
+) 
+VALUES (
+    345678, 4, 4, 'Temática A', 'Polo D', '2024-08-04', 
+    'Próxima tarefa Y', FALSE, 'Observação de prazo adicional para a pessoa 4', 
+    'Audiência D', '2024-08-25', '2024-09-05', 
+    'Movimentação adicional para a pessoa 4', '20 dias', '2024-08-02'
+);
+
+INSERT INTO PESSOA_EST_ATRIBUICAO (
+    Data_Atribuicao, Pessoa_id, Estagiario_id, Hora_Atribuicao
+) 
+VALUES (
+    '2024-08-04', 4, 4, '16:00:00'
+);
+
+INSERT INTO AUTOMOVEL (
+    Pessoa_id, Valor_Auto
+) 
+VALUES (
+    4, 30000.00
+);
+
+INSERT INTO DISPONIBILIDADE (
+    OAB_adv, Data_Disp, Dia_Semana, Hora_Inic, Hora_Fim, Formato
+) 
+VALUES (
+    98765, '2024-08-04', 'Segunda-feira', '11:00:00', '14:00:00', 'T'
+);
+
+INSERT INTO FILHO (Pessoa_id, Mora_junto) 
+VALUES (4, TRUE);
+
+INSERT INTO INVESTIMENTO (Pessoa_id, Valor_Inv) 
+VALUES (4, '10000');
+
+INSERT INTO BENEFICIO (Pessoa_id, Valor_Beneficio) 
+VALUES (4, 700.00);
+
+INSERT INTO EMAIL (Pessoa_id, Endereco_email) 
+VALUES (4, 'beatriz.oliveira@exemplo.com');
+
+INSERT INTO MEMBROS (Pessoa_id, Renda_Membro) 
+VALUES (4, 1800.00);
+
+INSERT INTO TELEFONE (Numero_tel, Pessoa_id) 
+VALUES ('(71) 99876-5432', 4);
+
+INSERT INTO TRATAMENTO (Pessoa_id, Valor_Trat) 
+VALUES (4, 200.00);
+
+INSERT INTO IMOVEL (Pessoa_id, Tipo_imovel, Valor_imovel) 
+VALUES (4, 'Apartamento', 450000.00);
+
+
+
+
+
+
+INSERT INTO PESSOA (
+    Nome_pess, Genero_pess, Raca_pess, Data_Nasc_pess, Nacionalidade_pess, 
+    Naturalidade_pess, Rg_pess, Celular_pess, Escolaridade_pess, 
+    Profissao_pess, Sit_Emprego_pess, Estado_civil_pess, Whatsapp_pess, 
+    Cpf_pess, Total_Membros_pess, Valor_Renda_pess, Comunid_LGBTQIA__pess, 
+    CNPJ_pess, Resumo_Caso_pessoa, Enquadra_lei, Materia_solicitada, 
+    Violencia, Logradouro, Numero, Cep, Bairro, Municipio, 
+    Pessoa_Enquadra_Atend, Materia_Relacionada, Data_Atend, Hora_Atend
+) 
+VALUES (
+    'Roberto Lima', 'Masculino', 'Indígena', '1980-11-08', 'Brasileira', 
+    'Manaus', '3344556677', '(92) 91234-5678', 'Ensino Superior Completo', 
+    'Engenheiro', 'Empregado', 'Divorciado', '(92) 98765-4321', 
+    '89012345678', 4, 7000.00, FALSE, NULL, 'Questão sobre propriedade rural...', 
+    'Lei 5432/10', 'Matéria E', FALSE, 'Rua Amazonas', '456', '69012345', 
+    'Centro', 'Manaus', TRUE, 'Matéria Relacionada V', 
+    '2024-08-20', '11:00:00'
+);
+
+INSERT INTO ADVOGADO (
+    OAB_adv, Nome_adv, CPF_adv, Especialidade_adv, Email_adv, 
+    Celular_adv, Ano_Ingresso_adv
+) 
+VALUES (
+    76543, 'Gabriela Santos', '90123456789', 'Direito Ambiental', 
+    'gabriela.santos@exemplo.com', '(92) 98765-4321', 2015
+);
+
+INSERT INTO ESTAGIARIO (
+    Nome_est, Celular_est, Tipo_est, Email_est, CPF_est
+) 
+VALUES (
+    'Thiago Oliveira', '(92) 99876-5432', 'C', 'thiago.oliveira@exemplo.com', 
+    '01234567890'
+);
+
+INSERT INTO ESTAG_ADVOG_AGENDAMENTO (
+    Estagiario_id, OAB_adv, Num_Autos, Motivo_Consulta, Ident_Atend_Adv, 
+    Data_Atend, Hora_Atend, Area_Direito, Tipo_Orient, Prazo_Judicial, 
+    Hora_Agend, Data_Agend
+) 
+VALUES (
+    5, 76543, 789123, 'Consulta sobre questões ambientais', 'Consulta inicial', 
+    '2024-08-20', '11:30:00', 'Direito Ambiental', 'Orientação jurídica', 
+    '2024-09-05', '11:00:00', '2024-08-15'
+);
+
+INSERT INTO CONTROLE (
+    NumProcesso, Estagiario_id, Pessoa_id, Tema, Polo, Data_Controle, 
+    Prox_Tarefa, Tem_Prazo_Dobro, Obs_Prazo, Audiencia, Prazo_Simples, 
+    Prazo_Dobrado, Movimentacao, Dias_Prox_Controle, Data_Proposicao
+) 
+VALUES (
+    456789, 5, 5, 'Temática B', 'Polo E', '2024-08-05', 
+    'Próxima tarefa Z', TRUE, 'Observação de prazo adicional para a pessoa 5', 
+    'Audiência E', '2024-09-01', '2024-09-10', 
+    'Movimentação adicional para a pessoa 5', '25 dias', '2024-08-03'
+);
+
+INSERT INTO PESSOA_EST_ATRIBUICAO (
+    Data_Atribuicao, Pessoa_id, Estagiario_id, Hora_Atribuicao
+) 
+VALUES (
+    '2024-08-05', 5, 5, '17:00:00'
+);
+
+INSERT INTO AUTOMOVEL (
+    Pessoa_id, Valor_Auto
+) 
+VALUES (
+    5, 35000.00
+);
+
+INSERT INTO DISPONIBILIDADE (
+    OAB_adv, Data_Disp, Dia_Semana, Hora_Inic, Hora_Fim, Formato
+) 
+VALUES (
+    76543, '2024-08-05', 'Terça-feira', '12:00:00', '15:00:00', 'A'
+);
+
+INSERT INTO FILHO (Pessoa_id, Mora_junto) 
+VALUES (5, TRUE);
+
+INSERT INTO INVESTIMENTO (Pessoa_id, Valor_Inv) 
+VALUES (5, '20000');
+
+INSERT INTO BENEFICIO (Pessoa_id, Valor_Beneficio) 
+VALUES (5, 1000.00);
+
+INSERT INTO EMAIL (Pessoa_id, Endereco_email) 
+VALUES (5, 'roberto.lima@exemplo.com');
+
+INSERT INTO MEMBROS (Pessoa_id, Renda_Membro) 
+VALUES (5, 3000.00);
+
+INSERT INTO TELEFONE (Numero_tel, Pessoa_id) 
+VALUES ('(92) 91234-5678', 5);
+
+INSERT INTO TRATAMENTO (Pessoa_id, Valor_Trat) 
+VALUES (5, 500.00);
+
+INSERT INTO IMOVEL (Pessoa_id, Tipo_imovel, Valor_imovel) 
+VALUES (5, 'Terreno', 600000.00);
+
+
+SET SQL_SAFE_UPDATES = 0;
+
+UPDATE ESTAGIARIO
+SET Celular_est = '(71) 98765-4321', 
+    Tipo_est = 'A', 
+    Email_est = 'novo.email@exemplo.com', 
+    CPF_est = '12345678901'
+WHERE Estagiario_id = 5;
+
+DELETE FROM ESTAGIARIO
+WHERE Estagiario_id = 5;
+
+
+
+SELECT * FROM PESSOA;
+SELECT * FROM ADVOGADO;
+SELECT * FROM ESTAGIARIO;
+SELECT * FROM CONTROLE;
+SELECT * FROM ESTAG_ADVOG_AGENDAMENTO;
+SELECT * FROM PESSOA_EST_ATRIBUICAO;
+SELECT * FROM AUTOMOVEL;
+SELECT * FROM BENEFICIO;
+SELECT * FROM INVESTIMENTO;
+SELECT * FROM FILHO;
+SELECT * FROM DISPONIBILIDADE;
+SELECT * FROM EMAIL;
+SELECT * FROM MEMBROS;
+SELECT * FROM TELEFONE;
+SELECT * FROM TRATAMENTO;
+SELECT * FROM IMOVEL;
